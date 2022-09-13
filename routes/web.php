@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use   App\Http\Controllers\UserController;
+use   App\Http\Controllers\SwipeController ;
+use   App\Http\Controllers\MatchController ;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    Route::post('/swipes', [SwipeController::class, 'store'])->name('swipes.store');
+
+    Route::get('/matches', [MatchController::class, 'index'])->name('matches.index');
+});
